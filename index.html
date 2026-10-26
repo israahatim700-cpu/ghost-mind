@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GHOST MIND OS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090910;color:#eeeafc;font-family:system-ui,Tahoma,sans-serif}
+header{padding:24px;background:#141322;border-bottom:1px solid #302747}
+.logo{color:#b99aff;font-size:24px;font-weight:800;letter-spacing:2px}
+small{color:#aaa0c0}
+main{max-width:1000px;margin:auto;padding:24px}
+h1{font-size:30px}
+p{color:#aaa0c0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{background:#171525;border:1px solid #39304c;border-radius:20px;padding:22px}
+button{background:#8d63ed;color:white;border:0;border-radius:12px;padding:12px 20px;font-size:15px;cursor:pointer}
+input,textarea{width:100%;background:#0d0c17;border:1px solid #55496b;color:white;border-radius:12px;padding:14px;margin:8px 0}
+textarea{min-height:100px}
+.note{background:#252037;padding:12px;border-radius:10px;margin-top:10px;overflow-wrap:anywhere}
+.status{color:#9ae6bd}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">◈ GHOST MIND</div>
+<small>PERSONAL INTELLIGENCE SYSTEM · V0.1</small>
+</header>
+<main>
+<h1>مرحبًا بك في غرفة القيادة 👁️</h1>
+<p>ذاكرتك الرقمية. ملاحظاتك. عالمك الخاص.</p>
+<div class="grid">
+<section class="card">
+<h2>🧠 الذاكرة</h2>
+<p>احفظي معلوماتك وملاحظاتك.</p>
+<textarea id="memory" placeholder="اكتبي ملاحظة..."></textarea>
+<button onclick="saveNote()">حفظ الملاحظة</button>
+<div id="notes"></div>
+</section>
+<section class="card">
+<h2>🔎 البحث الذكي</h2>
+<p>ابحثي داخل المعلومات المحفوظة.</p>
+<input id="search" placeholder="اكتبي كلمة للبحث">
+<button onclick="findNotes()">بحث</button>
+<div id="results"></div>
+</section>
+<section class="card">
+<h2>🕵️ غرفة التحقيق</h2>
+<p>سجلي فرضية أو استنتاجًا لمراجعته لاحقًا.</p>
+<textarea id="theory" placeholder="ما فرضيتك؟"></textarea>
+<button onclick="saveTheory()">حفظ الفرضية</button>
+<div id="theories"></div>
+</section>
+</div>
+<p class="status" id="status">● النظام جاهز</p>
+<small>البيانات محفوظة في هذا المتصفح فقط. لا تدخلي أسرارًا حساسة.</small>
+</main>
+<script>
+const key="ghost_mind_v1";
+let data;
+try {
+ data=JSON.parse(localStorage.getItem(key))||{notes:[],theories:[]};
+ if(!Array.isArray(data.notes)||!Array.isArray(data.theories))throw Error();
+} catch(e){data={notes:[],theories:[]};}
+function persist(){
+ try{localStorage.setItem(key,JSON.stringify(data));return true}
+ catch(e){alert("تعذر الحفظ في هذا المتصفح");return false}
+}
+function item(text){
+ const el=document.createElement("div");
+ el.className="note";el.textContent=text;return el;
+}
+function render(){
+ const notes=document.getElementById("notes");
+ const theories=document.getElementById("theories");
+ notes.replaceChildren(...data.notes.map(item));
+ theories.replaceChildren(...data.theories.map(item));
+}
+function saveNote(){
+ const el=document.getElementById("memory");
+ const value=el.value.trim();
+ if(!value)return;
+ data.notes.push(value);
+ if(persist()){el.value="";render()}
+}
+function saveTheory(){
+ const el=document.getElementById("theory");
+ const value=el.value.trim();
+ if(!value)return;
+ data.theories.push(value);
+ if(persist()){el.value="";render()}
+}
+function findNotes(){
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ const results=document.getElementById("results");
+ results.replaceChildren();
+ if(!q){results.append(item("اكتبي كلمة أولًا"));return}
+ const matches=data.notes.filter(n=>n.toLowerCase().includes(q));
+ if(!matches.length)results.append(item("ما لقينا نتائج"));
+ else results.append(...matches.map(item));
+}
+render();
+</script>
+</body>
+</html>
