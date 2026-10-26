@@ -1,106 +1,40 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GHOST MIND OS</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#090910;color:#eeeafc;font-family:system-ui,Tahoma,sans-serif}
-header{padding:24px;background:#141322;border-bottom:1px solid #302747}
-.logo{color:#b99aff;font-size:24px;font-weight:800;letter-spacing:2px}
-small{color:#aaa0c0}
-main{max-width:1000px;margin:auto;padding:24px}
-h1{font-size:30px}
-p{color:#aaa0c0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
-.card{background:#171525;border:1px solid #39304c;border-radius:20px;padding:22px}
-button{background:#8d63ed;color:white;border:0;border-radius:12px;padding:12px 20px;font-size:15px;cursor:pointer}
-input,textarea{width:100%;background:#0d0c17;border:1px solid #55496b;color:white;border-radius:12px;padding:14px;margin:8px 0}
-textarea{min-height:100px}
-.note{background:#252037;padding:12px;border-radius:10px;margin-top:10px;overflow-wrap:anywhere}
-.status{color:#9ae6bd}
-</style>
-</head>
-<body>
-<header>
-<div class="logo">◈ GHOST MIND</div>
-<small>PERSONAL INTELLIGENCE SYSTEM · V0.1</small>
-</header>
-<main>
-<h1>مرحبًا بك في غرفة القيادة 👁️</h1>
-<p>ذاكرتك الرقمية. ملاحظاتك. عالمك الخاص.</p>
-<div class="grid">
-<section class="card">
-<h2>🧠 الذاكرة</h2>
-<p>احفظي معلوماتك وملاحظاتك.</p>
-<textarea id="memory" placeholder="اكتبي ملاحظة..."></textarea>
-<button onclick="saveNote()">حفظ الملاحظة</button>
-<div id="notes"></div>
-</section>
-<section class="card">
-<h2>🔎 البحث الذكي</h2>
-<p>ابحثي داخل المعلومات المحفوظة.</p>
-<input id="search" placeholder="اكتبي كلمة للبحث">
-<button onclick="findNotes()">بحث</button>
-<div id="results"></div>
-</section>
-<section class="card">
-<h2>🕵️ غرفة التحقيق</h2>
-<p>سجلي فرضية أو استنتاجًا لمراجعته لاحقًا.</p>
-<textarea id="theory" placeholder="ما فرضيتك؟"></textarea>
-<button onclick="saveTheory()">حفظ الفرضية</button>
-<div id="theories"></div>
-</section>
-</div>
-<p class="status" id="status">● النظام جاهز</p>
-<small>البيانات محفوظة في هذا المتصفح فقط. لا تدخلي أسرارًا حساسة.</small>
-</main>
-<script>
-const key="ghost_mind_v1";
-let data;
-try {
- data=JSON.parse(localStorage.getItem(key))||{notes:[],theories:[]};
- if(!Array.isArray(data.notes)||!Array.isArray(data.theories))throw Error();
-} catch(e){data={notes:[],theories:[]};}
-function persist(){
- try{localStorage.setItem(key,JSON.stringify(data));return true}
- catch(e){alert("تعذر الحفظ في هذا المتصفح");return false}
-}
-function item(text){
- const el=document.createElement("div");
- el.className="note";el.textContent=text;return el;
-}
-function render(){
- const notes=document.getElementById("notes");
- const theories=document.getElementById("theories");
- notes.replaceChildren(...data.notes.map(item));
- theories.replaceChildren(...data.theories.map(item));
-}
-function saveNote(){
- const el=document.getElementById("memory");
- const value=el.value.trim();
- if(!value)return;
- data.notes.push(value);
- if(persist()){el.value="";render()}
-}
-function saveTheory(){
- const el=document.getElementById("theory");
- const value=el.value.trim();
- if(!value)return;
- data.theories.push(value);
- if(persist()){el.value="";render()}
-}
-function findNotes(){
- const q=document.getElementById("search").value.trim().toLowerCase();
- const results=document.getElementById("results");
- results.replaceChildren();
- if(!q){results.append(item("اكتبي كلمة أولًا"));return}
- const matches=data.notes.filter(n=>n.toLowerCase().includes(q));
- if(!matches.length)results.append(item("ما لقينا نتائج"));
- else results.append(...matches.map(item));
-}
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07131b"><title>GHOST MIND | Cyber Intelligence</title><style>
+:root{color-scheme:dark;--bg:#061017;--panel:#0d202a;--edge:#254454;--cyan:#43d9ef;--muted:#9bb4bf;--ink:#e7f8ff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#123343 0,transparent 38%),var(--bg);color:var(--ink);font-family:system-ui,Tahoma,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;background:#0e3544;color:var(--ink);border:1px solid #2b6575;border-radius:12px;padding:11px 14px}button:hover{border-color:var(--cyan)}button.primary{background:#087c94;border-color:#1dc5df;font-weight:700}button.danger{background:#3d1b28;border-color:#854052}input,textarea,select{width:100%;background:#07151d;border:1px solid var(--edge);border-radius:12px;color:var(--ink);padding:12px;margin:6px 0 12px}textarea{min-height:100px;resize:vertical}.shell{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100dvh}.sidebar{padding:22px 14px;background:#081923;border-left:1px solid var(--edge)}.brand{font-size:23px;letter-spacing:2px;color:var(--cyan);font-weight:900}.sub{font-size:11px;color:var(--muted);letter-spacing:1px}.nav{display:block;width:100%;text-align:right;margin-top:10px}.nav.active{background:#0b5265;border-color:var(--cyan)}.main{padding:26px;max-width:1250px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.pill{border:1px solid #1f6672;color:#8cf3d2;border-radius:30px;padding:7px 12px;font-size:12px}h1{font-size:clamp(25px,4vw,42px);margin:20px 0 4px}h2{margin:0 0 12px;font-size:20px}p,.hint{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}.panel{background:linear-gradient(145deg,#102734,#0a1c25);border:1px solid var(--edge);border-radius:20px;padding:20px;margin:14px 0;min-width:0}.metric{font-size:34px;color:var(--cyan);font-weight:800}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.entry{border:1px solid #284b59;background:#091b24;border-radius:13px;padding:14px;margin:10px 0;overflow-wrap:anywhere}.entry .meta{font-size:12px;color:var(--muted);margin-bottom:8px}.entry .actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.hidden{display:none!important}.empty{color:var(--muted);padding:15px;border:1px dashed var(--edge);border-radius:12px}.tag{font-size:12px;color:#82e7f5}pre{white-space:pre-wrap;overflow-wrap:anywhere}footer{color:var(--muted);font-size:12px;margin:30px 0}@media(max-width:750px){.shell{display:block}.sidebar{padding:14px;position:sticky;top:0;z-index:5;border-left:0;border-bottom:1px solid var(--edge)}.sidebar .navs{display:flex;overflow-x:auto;gap:7px}.nav{width:auto;white-space:nowrap;margin:10px 0 0}.main{padding:16px}.panel{padding:15px}}
+</style></head><body><div class="shell"><aside class="sidebar"><div class="brand">◈ GHOST MIND</div><div class="sub">CYBER INTELLIGENCE / V0.2</div><div class="navs"><button class="nav active" data-page="dashboard">⌘ لوحة القيادة</button><button class="nav" data-page="memory">◉ الذاكرة</button><button class="nav" data-page="cases">◇ التحقيقات</button><button class="nav" data-page="search">⌕ البحث والروابط</button><button class="nav" data-page="backup">⇩ النسخ الاحتياطي</button></div></aside><main class="main"><div class="top"><span class="sub">PERSONAL INTELLIGENCE WORKSPACE</span><span class="pill">● LOCAL SYSTEM READY</span></div><h1 id="heading">غرفة القيادة</h1><p id="intro">مساحة منظمة لملاحظاتك وفرضياتك، دون ادعاء استنتاجات غير مثبتة.</p>
+<section id="dashboard"><div class="grid"><div class="panel"><div class="hint">الملاحظات</div><div id="noteCount" class="metric">0</div></div><div class="panel"><div class="hint">الفرضيات</div><div id="caseCount" class="metric">0</div></div><div class="panel"><div class="hint">روابط الكلمات المشتركة</div><div id="linkCount" class="metric">0</div></div></div><div class="panel"><h2>◈ بدء سريع</h2><p>سجلي معلومة أو فرضية، ثم راجعي الروابط المحتملة بينهما. تشابه الكلمات لا يثبت صحة أي استنتاج.</p><div class="toolbar"><button data-go="memory" class="primary">إضافة ملاحظة</button><button data-go="cases">ملف تحقيق جديد</button></div></div></section>
+<section id="memory" class="hidden"><div class="panel"><h2>◉ الذاكرة</h2><label for="noteInput">ملاحظة جديدة</label><textarea id="noteInput" placeholder="اكتبي معلومة أو ملاحظة..."></textarea><button id="addNote" class="primary">حفظ الملاحظة</button></div><div class="panel"><h2>الملاحظات المحفوظة</h2><div id="notesList"></div></div></section>
+<section id="cases" class="hidden"><div class="panel"><h2>◇ غرفة التحقيق</h2><p>الفرضيات ليست حقائق حتى تدعمها أدلة مستقلة.</p><label for="caseInput">فرضية أو سؤال للتحقيق</label><textarea id="caseInput" placeholder="ما الفرضية التي تريدين مراجعتها؟"></textarea><button id="addCase" class="primary">حفظ الفرضية</button></div><div class="panel"><h2>ملفات التحقيق</h2><div id="casesList"></div></div></section>
+<section id="search" class="hidden"><div class="panel"><h2>⌕ البحث في الذاكرة</h2><input id="query" placeholder="اكتبي كلمة للبحث..." aria-label="بحث"><div id="searchResults"></div></div><div class="panel"><h2>روابط محتملة</h2><p>نربط الملاحظات فقط عندما تشترك في كلمة طويلة. هذه مطابقة نصية وليست تحليلًا ذكيًا أو دليلًا على علاقة حقيقية.</p><div id="links"></div></div></section>
+<section id="backup" class="hidden"><div class="panel"><h2>⇩ النسخ الاحتياطي</h2><p>احفظي نسخة JSON على جهازك. الملف غير مشفّر، فلا تشاركيه مع أحد.</p><div class="toolbar"><button id="export" class="primary">تصدير البيانات</button><label for="import" style="border:1px solid var(--edge);padding:11px 14px;border-radius:12px;cursor:pointer">استيراد نسخة JSON</label><input type="file" id="import" accept=".json,application/json" style="display:none"></div><p>الاستيراد يستبدل بيانات التطبيق الحالية بعد التأكيد. صدّري نسخة قبل الاستيراد.</p></div><div class="panel"><h2>الخصوصية</h2><p>البيانات محفوظة في مساحة التخزين المحلية لهذا المتصفح. لا تتم مزامنتها بين الأجهزة. مسح بيانات المتصفح قد يحذفها. الكود منشور علنًا لكن الملاحظات لا تُرفع تلقائيًا إلى GitHub.</p></div></section><footer>GHOST MIND V0.2 · Offline logic · No AI API connected</footer></main></div><script>
+'use strict';
+const KEY='ghost_mind_v2';const OLD_KEYS=['ghost-mind-v1','ghost_mind_v1'];let data;let saveError=false;
+function cleanArray(a){return Array.isArray(a)?a.filter(x=>typeof x==='string').slice(0,10000):[]}
+function normalize(x){return {notes:cleanArray(x?.notes),theories:cleanArray(x?.theories)}}
+try{
+ const current=localStorage.getItem(KEY);
+ if(current!==null){data=normalize(JSON.parse(current))}
+ else {
+  const oldRaw=OLD_KEYS.map(k=>localStorage.getItem(k)).find(v=>v!==null);const old=oldRaw===undefined?null:JSON.parse(oldRaw);
+  data={notes:Array.isArray(old?.notes)?old.notes.map(n=>typeof n==='string'?n:[n?.title,n?.body].filter(Boolean).join(' | ')).filter(Boolean):[],theories:Array.isArray(old?.cases||old?.theories)?(old.cases||old.theories).map(c=>typeof c==='string'?c:[c?.title,c?.theory,Array.isArray(c?.lines)?c.lines.join(' | '):''].filter(Boolean).join(' | ')).filter(Boolean):[]};
+  // Preserve the old localStorage record unchanged; write a separate v2 record.
+  if(old!==null)localStorage.setItem(KEY,JSON.stringify(data));
+ }
+}catch(e){data={notes:[],theories:[]};alert('تعذر قراءة البيانات القديمة. لم يتم حذفها. لا تضيفي بيانات قبل أخذ نسخة احتياطية.')}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));saveError=false;return true}catch(e){saveError=true;alert('تعذر الحفظ. تأكدي من مساحة التخزين أو إعدادات المتصفح.');return false}}
+const $=id=>document.getElementById(id);
+const labels={dashboard:['غرفة القيادة','نظرة عامة على ذاكرة النظام وملفات التحقيق.'],memory:['الذاكرة','إدارة الملاحظات المحفوظة على جهازك.'],cases:['التحقيقات','فرضيات قابلة للتعديل، وليست أحكامًا نهائية.'],search:['البحث والروابط','بحث نصي وروابط مبدئية بين المعلومات.'],backup:['النسخ الاحتياطي','صدّري بياناتك قبل أي تغيير كبير.']};
+function show(page){Object.keys(labels).forEach(id=>$(id).classList.toggle('hidden',id!==page));document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('heading').textContent=labels[page][0];$('intro').textContent=labels[page][1];render();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.page)));document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
+function entry(text,i,kind){const el=document.createElement('div');el.className='entry';const meta=document.createElement('div');meta.className='meta';meta.textContent=(kind==='notes'?'MEMORY':'HYPOTHESIS')+' #'+(i+1);const body=document.createElement('div');body.textContent=text;body.style.whiteSpace='pre-wrap';const actions=document.createElement('div');actions.className='actions';const edit=document.createElement('button');edit.textContent='تعديل';edit.onclick=()=>{const v=prompt('عدّلي النص:',data[kind][i]);if(v===null)return;if(!v.trim())return alert('لا يمكن حفظ نص فارغ');const old=data[kind][i];data[kind][i]=v.trim();if(!persist())data[kind][i]=old;render()};const del=document.createElement('button');del.textContent='حذف';del.className='danger';del.onclick=()=>{if(!confirm('تأكيد حذف هذا العنصر؟'))return;const old=[...data[kind]];data[kind].splice(i,1);if(!persist())data[kind]=old;render()};actions.append(edit,del);el.append(meta,body,actions);return el}
+function list(target,arr,kind){const root=$(target);root.replaceChildren();if(!arr.length){const e=document.createElement('div');e.className='empty';e.textContent='لا توجد عناصر حتى الآن';root.append(e)}else arr.forEach((s,i)=>root.append(entry(s,i,kind)))}
+function words(s){return [...new Set((s.toLowerCase().match(/[\p{L}\p{N}]{4,}/gu)||[]).filter(w=>!['المعلومات','الملاحظة','التحقيق','there','about','which'].includes(w)))]}
+function connections(){const links=[];for(let i=0;i<data.notes.length;i++)for(let j=i+1;j<data.notes.length;j++){const common=words(data.notes[i]).filter(w=>words(data.notes[j]).includes(w));if(common.length)links.push({i,j,common})}return links}
+function render(){list('notesList',data.notes,'notes');list('casesList',data.theories,'theories');$('noteCount').textContent=data.notes.length;$('caseCount').textContent=data.theories.length;const pairs=connections();$('linkCount').textContent=pairs.length;const root=$('links');root.replaceChildren();if(!pairs.length){const e=document.createElement('div');e.className='empty';e.textContent='لا توجد روابط نصية واضحة بعد';root.append(e)}else pairs.slice(0,30).forEach(p=>{const e=document.createElement('div');e.className='entry';e.textContent=`ملاحظة ${p.i+1} ↔ ملاحظة ${p.j+1} | كلمات مشتركة: ${p.common.slice(0,5).join('، ')}`;root.append(e)});search()}
+function add(kind,id){const field=$(id),v=field.value.trim();if(!v)return alert('اكتبي نصًا أولًا');data[kind].push(v);if(persist()){field.value=''}else data[kind].pop();render()}
+$('addNote').onclick=()=>add('notes','noteInput');$('addCase').onclick=()=>add('theories','caseInput');
+function search(){const q=$('query').value.trim().toLowerCase(),root=$('searchResults');root.replaceChildren();if(!q){const e=document.createElement('div');e.className='hint';e.textContent='ابدئي بكتابة كلمة للبحث';root.append(e);return}let found=0;for(const kind of ['notes','theories'])data[kind].forEach((v,i)=>{if(v.toLowerCase().includes(q)){const e=document.createElement('div');e.className='entry';e.textContent=(kind==='notes'?'ملاحظة':'فرضية')+' '+(i+1)+': '+v;root.append(e);found++}});if(!found){const e=document.createElement('div');e.className='empty';e.textContent='لا توجد نتائج مطابقة';root.append(e)}}$('query').addEventListener('input',search);
+$('export').onclick=()=>{const blob=new Blob([JSON.stringify({format:'ghost-mind-backup',version:2,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='ghost-mind-backup.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)};
+$('import').onchange=async ev=>{const file=ev.target.files?.[0];if(!file)return;try{if(file.size>3_000_000)throw Error('الملف كبير جدًا');const obj=JSON.parse(await file.text());if(obj.format!=='ghost-mind-backup'||!obj.data||!Array.isArray(obj.data.notes)||!Array.isArray(obj.data.theories)||!obj.data.notes.every(x=>typeof x==='string')||!obj.data.theories.every(x=>typeof x==='string'))throw Error('صيغة النسخة غير صالحة');if(!confirm('سيتم استبدال جميع الملاحظات والفرضيات الحالية. هل أنتِ متأكدة؟'))return;const old=data;data=normalize(obj.data);if(!persist())data=old;render()}catch(e){alert(e.message||'تعذر قراءة الملف')}finally{ev.target.value=''}};
 render();
-</script>
-</body>
-</html>
+</script></body></html>
